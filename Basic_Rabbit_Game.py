@@ -1,4 +1,4 @@
-map0 = open('Rabbit_Game_Map.txt', 'r+')
+map0 = open('Basic_Rabbit_Game_Map.txt', 'r+')
 map1 = [x.split() for x in map0.readlines()]
 
 Hollows, Walls, Score, Move = [],[], 0, 0
