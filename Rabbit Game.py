@@ -1,28 +1,29 @@
-import ast
+map0 = open('Rabbit Game Map.txt', 'r+')
+map1 = [x.split() for x in map0.readlines()]
 
-map = list(ast.literal_eval(input('Please enter feeding map as a list: \n')))
-plan = list(ast.literal_eval(input('Please enter direction of movements as a list: \n')))
+Hollows, Walls, Score, Move = [],[], 0, 0
+Items = {'B':lambda x: x+5, 'C':lambda x: x+15, 'P':lambda x: x-15, 'M':lambda x: x-5, 'X':lambda x: x, 'F':lambda x: x}
 
-global horizontal, vertical, Posions, Walls, value
-horizontal, vertical, Posions, Walls, value = 0, 0, [], [], 0
-Score, Items = 0, {'C': 10, 'A': 5, 'M': -5, 'X': 0}
+for i in range(len(map1)):
+        for j in range(len(map1[0])):
+            item = map1[i][j]
+            print(item, end=' ')
+            if item == 'W':
+                Walls.append((i,j))
+            elif item == '*':
+                horizontal, vertical = i,j
+        print(' ')
+        
+Walls = tuple(Walls)
 
 def printing_board(x):
+    print()
     for i in x:
         for j in i:
             print(j, end=' ')
-            if j == 'P':
-                Posions.append([map.index(i), map[map.index(i)].index(j)])
-            elif j == 'W':
-                Walls.append([map.index(i), map[map.index(i)].index(j)])
-            elif j == '*':
-                horizontal, vertical = map.index(i), map[map.index(i)].index(j)
         print(' ')
-    return [horizontal, vertical]
-
-print('Your board is: ')
-a = printing_board(map)
-horizontal, vertical = a[0], a[1]
+    print()
+    return x
 
 def next_index(x):
     a = horizontal
@@ -35,25 +36,28 @@ def next_index(x):
         b = vertical - 1
     elif x == 'R':
         b = vertical + 1
-    new_position = [a, b]
+    if a < 0 or b < 0 or a == len(map1) or b == len(map1[0]):
+        exit('You are lost!')
+    new_position = (a, b)
     return new_position
 
-for step in plan:
+while True:
+    Move += 1
+    step = input()
     step = next_index(step)
-    if step[0] < 0 or step[1] < 0 or step[0] > len(map) or step[1] > len(map):
+    if step in Walls:
+        print('You cannot pass walls!')
         continue
-    elif step in Walls:
-        continue
-    elif step in Posions:
-        map[horizontal][vertical], map[step[0]][step[1]] = 'X', '*'
-        break
     else:
-        value = map[step[0]][step[1]]
-        Score += Items[value]
-        map[horizontal][vertical] = 'X'
+        Position = map1[step[0]][step[1]]
+        if Position == 'H':
+            print('You fell into hollow!')
+            break
+        Score = Items[Position](Score)
+        map1[horizontal][vertical] = 'X'
         horizontal, vertical = step[0], step[1]
-        map[horizontal][vertical] = '*'
-
-print('Your output should be like this: ')
-printing_board(map)
-print('Your score is', Score)
+        map1[horizontal][vertical] = '*'
+        printing_board(map1)
+        if Position == 'F':
+            print('You reached finish line :D Your score is:', Score)
+            break
