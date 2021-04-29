@@ -1,6 +1,6 @@
 # I tried to make this application without any Python method. My goals in making these are to understand
 # how methods work and to recreate some methods. Matrix Application includes addition, subtraction, scalar
-# multiplication, matrix multiplication and finding inverse of matrix.
+# multiplication, matrix multiplication and finding inverse of matrix operations.
 
 def convert(matrix):  # This function converts string to list.
     columns = 0
